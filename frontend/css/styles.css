@@ -1,0 +1,18 @@
+.topbar {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar-left h1 {
+  font-size: 22px;
+}
+
+.topbar-right {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
