@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<head>
+  <title>Recruiter Dashboard - Recruitment System</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>Recruitment System</h1>
+    </div>
+
+    <nav class="topbar-right">
+      <a href="recruiter-dashboard.html" class="nav-link active">Dashboard</a>
+      <a href="#" class="nav-link">Manage Jobs</a>
+      <a href="login.html" class="nav-link" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <section class="page-header">
+      <div>
+        <h2 id="recruiterWelcomeTitle">Recruiter Dashboard</h2>
+        <p>Manage jobs and track incoming applications.</p>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-label">Total Jobs</p>
+        <h3 id="totalJobsCount">0</h3>
+      </div>
+
+      <div class="stat-card">
+        <p class="stat-label">Open Jobs</p>
+        <h3 id="openJobsCount">0</h3>
+      </div>
+
+      <div class="stat-card">
+        <p class="stat-label">Total Applications</p>
+        <h3 id="totalRecruiterApplications">0</h3>
+      </div>
+
+      <div class="stat-card">
+        <p class="stat-label">Shortlisted</p>
+        <h3 id="recruiterShortlistedCount">0</h3>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <div class="dashboard-card">
+        <div class="section-header">
+          <h3>Recruiter Profile</h3>
+        </div>
+
+        <div id="recruiterProfileSummary">
+          <p>profile information from API.</p>
+        </div>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="section-header">
+          <h3>Recent Job Posts</h3>
+          <a href="recruiter-jobs.html" class="text-link">View all</a>
+        </div>
+
+        <div id="recentRecruiterJobs">
+          <p>Recent job posts from API.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-card" style="margin-top: 20px;">
+      <div class="section-header">
+        <h3>Recent Applications</h3>
+      </div>
+
+      <div id="recentRecruiterApplications">
+        <p>applications from API.</p>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>
