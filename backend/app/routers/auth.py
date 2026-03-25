@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
-from security import hash_password
+from security import hash_password, verify_password
 from db.session import get_session
-from schemas.user import UserCreate, UserLogin
-from sqlmodel import Session
+from schemas.user import UserCreate, UserLogin, UserResponse
+from sqlmodel import Session, select
 from models.user import User
 
 router = APIRouter()
@@ -31,7 +31,26 @@ def register(formData: UserCreate, session: Session = Depends(get_session)):
     return {"message": "User registered successfully"}
 
 
-@router.post("/auth/login")
-def login(form_data: UserLogin, session: Session = Depends(get_session)):
-    return {"message": "Login endpoint working"}
+@router.post("/auth/login", response_model=UserResponse)
+def login(formData: UserLogin, session: Session = Depends(get_session)):
+
+    user = session.exec(
+        select(User).where(User.email == formData.email)
+    ).first()
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    if not verify_password(formData.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    return {
+        UserResponse(
+            id=user.id,
+            full_name=user.first_name + " " + user.last_name,
+            email=user.email,
+            role=user.role
+        )
+    }
+    
 
