@@ -4,7 +4,8 @@ from enums import UserRole
 
 
 class UserCreate(BaseModel):
-    full_name: str
+    firstName: str
+    lastName: str
     email: EmailStr
     password: str
     role: UserRole

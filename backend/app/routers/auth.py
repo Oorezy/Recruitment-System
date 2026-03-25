@@ -15,9 +15,10 @@ def auth():
 
 @router.post("/auth/register")
 def register(formData: UserCreate, session: Session = Depends(get_session)):
-    
+
     new_user = User(
-        full_name=formData.full_name,
+        first_name=formData.firstName,
+        last_name=formData.lastName,
         email=formData.email,
         password_hash=hash_password(formData.password),
         role=formData.role,
