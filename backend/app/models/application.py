@@ -1,6 +1,6 @@
 from typing import Optional
 from sqlmodel import SQLModel, Field
-from app.enums import ApplicationStatus
+from enums import ApplicationStatus
 
 
 class Application(SQLModel, table=True):

@@ -1,6 +1,6 @@
 from typing import Optional
 from sqlmodel import SQLModel, Field
-from app.enums import UserRole
+from enums import UserRole
 
 
 class User(SQLModel, table=True):
