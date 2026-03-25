@@ -13,7 +13,6 @@ class Application(SQLModel, table=True):
     status: ApplicationStatus = ApplicationStatus.APPLIED
     match_score: Optional[int] = None
     matched_skills: Optional[str] = ""
-    missing_skills: Optional[str] = ""
     created_at: str
 
 

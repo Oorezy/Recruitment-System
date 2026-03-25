@@ -1,10 +1,13 @@
 import os
 
 from fastapi import FastAPI
-from app.config import settings
+from config import settings
 from fastapi.middleware.cors import CORSMiddleware
+from db.init_db import init_db
 
 app = FastAPI(title=settings.APP_NAME)
+
+init_db()
 
 app.add_middleware(
     CORSMiddleware,
