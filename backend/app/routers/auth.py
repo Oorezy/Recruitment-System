@@ -45,13 +45,13 @@ def login(formData: UserLogin, session: Session = Depends(get_session)):
     if not verify_password(formData.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    return {
-        UserResponse(
+    return UserResponse(
             id=user.id,
-            full_name=user.first_name + " " + user.last_name,
+            firstName=user.first_name,
+            lastName=user.last_name,
             email=user.email,
             role=user.role
         )
-    }
+    
     
 
