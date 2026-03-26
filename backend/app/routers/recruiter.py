@@ -41,3 +41,42 @@ def create_job(job_data: JobCreate, session: Session = Depends(get_session)):
         "message": "Job created successfully",
         "job": serialize_job(job)
     }
+
+@router.put("/jobs/{job_id}")
+def update_job(job_id: int, job_data: JobUpdate, session: Session = Depends(get_session)):
+    job = session.get(Job, job_id)
+
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    update_data = job_data.model_dump(exclude_unset=True)
+
+    if "title" in update_data:
+        job.title = update_data["title"]
+    if "department" in update_data:
+        job.department = update_data["department"]
+    if "location" in update_data:
+        job.location = update_data["location"]
+    if "job_type" in update_data:
+        job.job_type = update_data["job_type"]
+    if "deadline" in update_data:
+        job.deadline = update_data["deadline"]
+    if "status" in update_data:
+        job.status = update_data["status"]
+    if "description" in update_data:
+        job.description = update_data["description"]
+    if "required_skills" in update_data:
+        job.required_skills = list_to_comma_string(update_data["required_skills"])
+    if "responsibilities" in update_data:
+        job.responsibilities = list_to_newline_string(update_data["responsibilities"])
+    if "qualifications" in update_data:
+        job.qualifications = list_to_newline_string(update_data["qualifications"])
+
+    session.add(job)
+    session.commit()
+    session.refresh(job)
+
+    return {
+        "message": "Job updated successfully",
+        "job": serialize_job(job)
+    }
