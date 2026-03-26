@@ -80,3 +80,16 @@ def update_job(job_id: int, job_data: JobUpdate, session: Session = Depends(get_
         "message": "Job updated successfully",
         "job": serialize_job(job)
     }
+
+
+@router.delete("/jobs/{job_id}")
+def delete_job(job_id: int, session: Session = Depends(get_session)):
+    job = session.get(Job, job_id)
+
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    session.delete(job)
+    session.commit()
+
+    return {"message": "Job deleted successfully"}
