@@ -1,6 +1,7 @@
 import os
 
 from fastapi import FastAPI
+from routers import jobs
 from config import settings
 from fastapi.middleware.cors import CORSMiddleware
 from db.init_db import init_db
@@ -22,6 +23,7 @@ os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 
 
 app.include_router(auth.router)
+app.include_router(jobs.router, prefix="/jobs", tags=["Jobs"])
 
 @app.get("/")
 async def root():
