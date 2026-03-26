@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
-from utils import serialize_job
-from db.session import get_session
-from models.job import Job
-from schemas.job import JobResponse
+from app.utils import serialize_job
+from app.db.session import get_session
+from app.models.job import Job
+from app.schemas.job import JobResponse
 
 router = APIRouter()
 

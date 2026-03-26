@@ -1,6 +1,7 @@
+from datetime import datetime
 from typing import Optional
 from sqlmodel import SQLModel, Field
-from enums import ApplicationStatus
+from app.enums import ApplicationStatus
 
 
 class Application(SQLModel, table=True):
@@ -13,7 +14,7 @@ class Application(SQLModel, table=True):
     status: ApplicationStatus = ApplicationStatus.APPLIED
     match_score: Optional[int] = None
     matched_skills: Optional[str] = ""
-    created_at: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)   
 
 
 class ApplicationStatusHistory(SQLModel, table=True):
@@ -23,4 +24,4 @@ class ApplicationStatusHistory(SQLModel, table=True):
     application_id: int = Field(foreign_key="applications.id")
     status: ApplicationStatus
     note: Optional[str] = None
-    updated_at: str
+    updated_at: datetime = Field(default_factory=datetime.utcnow)

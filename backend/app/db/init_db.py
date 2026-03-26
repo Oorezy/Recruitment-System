@@ -1,10 +1,10 @@
 from sqlmodel import SQLModel
-from db.session import engine
+from app.db.session import engine
 
 # import models so SQLModel knows them
-from models.user import User
-from models.job import Job
-from models.application import Application, ApplicationStatusHistory
+from app.models.user import User
+from app.models.job import Job
+from app.models.application import Application, ApplicationStatusHistory
 
 
 def init_db() -> None:
