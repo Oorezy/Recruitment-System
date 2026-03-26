@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from app.config import settings
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.init_db import init_db
-from app.routers import auth, jobs, recruiter
+from app.routers import auth, jobs, recruiter, applications
 
 app = FastAPI(title=settings.APP_NAME)
 
@@ -23,6 +23,7 @@ os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 app.include_router(auth.router)
 app.include_router(jobs.router, prefix="/jobs", tags=["Jobs"])
 app.include_router(recruiter.router, prefix="/recruiter", tags=["Recruiter"])
+app.include_router(applications.router, prefix="/applications", tags=["Applications"])
 
 @app.get("/")
 async def root():
