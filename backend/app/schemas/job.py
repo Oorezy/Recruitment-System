@@ -14,6 +14,7 @@ class JobCreate(BaseModel):
     required_skills: List[str] = []
     responsibilities: List[str] = []
     qualifications: List[str] = []
+    recruiter_id: Optional[int] = None
 
 
 class JobUpdate(BaseModel):

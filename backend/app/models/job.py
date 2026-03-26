@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from typing import Optional
 from sqlmodel import SQLModel, Field
 
@@ -17,4 +17,5 @@ class Job(SQLModel, table=True):
     required_skills: str 
     responsibilities: str = ""
     qualifications: str = ""
-    created_at: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    recruiter_id: Optional[int] = Field(default=None, foreign_key="users.id")
