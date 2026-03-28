@@ -11,7 +11,7 @@ from app.models.application import Application, ApplicationStatusHistory
 from app.models.job import Job
 from app.services.fileUpload import save_resume_file
 from app.enums import UserRole
-from app.schemas.application import MyApplicationListResponse
+from app.schemas.application import ApplicationHistoryResponse, MyApplicationListResponse, MyApplicationDetailsResponse
 
 
 router = APIRouter()
@@ -95,3 +95,39 @@ def get_my_applications(applicant_id: int, session: Session = Depends(get_sessio
         ))
 
     return {"applications": result}
+
+@router.get("/my/{application_id}", response_model=MyApplicationDetailsResponse)
+def get_my_application_details(
+    application_id: int,
+    applicant_id: int,
+    session: Session = Depends(get_session)
+):
+    application = session.get(Application, application_id)
+    if not application or application.applicant_id != applicant_id:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    job = session.get(Job, application.job_id)
+    history_items = session.exec(
+        select(ApplicationStatusHistory)
+        .where(ApplicationStatusHistory.application_id == application.id)
+    ).all()
+
+    return {
+        MyApplicationDetailsResponse(
+            id=application.id,
+            job_title=job.title,
+            company_name="Google",
+            status=application.status,
+            applied_at=application.created_at,
+            cover_letter=application.cover_letter,
+            resume_filename=application.resume_filename,
+            status_history=[
+                ApplicationHistoryResponse(
+                    status=item.status,
+                    note=item.note,
+                    updated_at=item.updated_at
+                )
+                for item in history_items
+            ]
+        )
+    }
