@@ -13,5 +13,4 @@ class User(SQLModel, table=True):
     password_hash: str
     role: UserRole
     phone: Optional[str] = None
-    resume_path: Optional[str] = None
-    resume_filename: Optional[str] = None
+    

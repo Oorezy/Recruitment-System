@@ -9,6 +9,7 @@ from app.db.session import get_session
 from app.models.user import User
 from app.models.application import Application, ApplicationStatusHistory
 from app.models.job import Job
+from app.services.fileUpload import save_resume_file
 
 
 router = APIRouter()
@@ -30,13 +31,19 @@ def submit_application(job_id: int = Form(...),
         raise HTTPException(status_code=404, detail="Job not found")
     
     # Handle if application FileExistsError
-    # Save the resume file
+        
     application = Application(
         job_id=job_id,
         applicant_id=applicant_id,
         cover_letter=cover_letter,
         status=Application.ApplicationStatus.APPLIED
     )
+
+    if resume:
+            save_path, original_name = save_resume_file(resume)
+            application.resume_path = save_path
+            application.resume_filename = original_name
+
         # Run api call to match resume with job
 
     session.add(application)

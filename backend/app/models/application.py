@@ -15,6 +15,8 @@ class Application(SQLModel, table=True):
     match_score: Optional[int] = None
     matched_skills: Optional[str] = ""
     created_at: datetime = Field(default_factory=datetime.utcnow)   
+    resume_path: Optional[str] = None
+    resume_filename: Optional[str] = None
 
 
 class ApplicationStatusHistory(SQLModel, table=True):
