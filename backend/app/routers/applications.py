@@ -10,6 +10,8 @@ from app.models.user import User
 from app.models.application import Application, ApplicationStatusHistory
 from app.models.job import Job
 from app.services.fileUpload import save_resume_file
+from app.enums import UserRole
+from app.schemas.application import MyApplicationListResponse
 
 
 router = APIRouter()
@@ -23,7 +25,7 @@ def submit_application(job_id: int = Form(...),
 ):
     applicant = session.get(User, applicant_id)
 
-    if not applicant or applicant.role != "applicant":
+    if not applicant or applicant.role != UserRole.APPLICANT:
         raise HTTPException(status_code=404, detail="Applicant not found")  
     
     job = session.get(Job, job_id)
@@ -67,3 +69,29 @@ def submit_application(job_id: int = Form(...),
     session.commit()
 
     return {"message": "Application submitted successfully", "application_id": application.id}
+
+
+@router.get("/my", response_model=list[MyApplicationListResponse])
+def get_my_applications(applicant_id: int, session: Session = Depends(get_session)):
+
+    applicant = session.get(User, applicant_id)
+    if not applicant or applicant.role != UserRole.APPLICANT:
+        raise HTTPException(status_code=404, detail="Applicant not found")
+
+    applications = session.exec(
+        select(Application, Job)
+        .join(Job, Job.id == Application.job_id)
+        .where(Application.applicant_id == applicant_id)
+    ).all()
+
+    result = []
+    for application, job in applications:
+        result.append(MyApplicationListResponse(
+            id=application.id,
+            job_title=job.title,
+            company_name="Google",
+            status=application.status,
+            applied_at=application.created_at,
+        ))
+
+    return {"applications": result}
