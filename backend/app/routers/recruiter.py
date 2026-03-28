@@ -3,7 +3,10 @@ from sqlmodel import Session, select
 
 from app.db.session import get_session
 from app.models.job import Job
+from app.models.application import Application
+from app.models.user import User
 from app.schemas.job import JobCreate, JobUpdate
+from app.schemas.application import RecruiterApplicationListResponse, RecruiterApplicationsResponse
 from app.utils import (
     list_to_comma_string,
     list_to_newline_string,
@@ -93,3 +96,31 @@ def delete_job(job_id: int, session: Session = Depends(get_session)):
     session.commit()
 
     return {"message": "Job deleted successfully"}
+
+@router.get("/jobs/{job_id}/applications", response_model=RecruiterApplicationListResponse)
+def get_job_applications(job_id: int, session: Session = Depends(get_session)):
+    job = session.get(Job, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    rows = session.exec(
+        select(Application, User)
+        .join(User, User.id == Application.applicant_id)
+        .where(Application.job_id == job_id)
+    ).all()
+
+    return RecruiterApplicationListResponse(
+        job_title=job.title,
+        job_description=job.description,
+        applications=[
+            RecruiterApplicationsResponse(
+                id=application.id,
+                applicant_name=user.full_name,
+                email=user.email,
+                status=application.status,
+                applied_at=application.created_at,
+                match_score=application.match_score
+            )
+            for application, user in rows
+        ]
+    )

@@ -32,3 +32,18 @@ class ApplicationHistoryResponse(BaseModel):
     updated_at: datetime
     class Config:
         arbitrary_types_allowed = True
+
+class RecruiterApplicationListResponse(BaseModel):
+    job_title: str
+    job_description: str
+    applications: List[RecruiterApplicationsResponse] = []
+
+class RecruiterApplicationsResponse(BaseModel):
+    id: int
+    applicant_name: str
+    email: str
+    status: ApplicationStatus
+    applied_at: datetime
+    match_score: Optional[int] = None
+    class Config:
+        arbitrary_types_allowed = True
