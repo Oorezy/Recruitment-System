@@ -3,10 +3,11 @@ from sqlmodel import Session, select
 
 from app.db.session import get_session
 from app.models.job import Job
-from app.models.application import Application
+from app.models.application import Application, ApplicationStatusHistory
 from app.models.user import User
 from app.schemas.job import JobCreate, JobUpdate
 from app.schemas.application import RecruiterApplicationListResponse, RecruiterApplicationsResponse
+from app.enums import ApplicationStatus
 from app.utils import (
     list_to_comma_string,
     list_to_newline_string,
@@ -124,3 +125,32 @@ def get_job_applications(job_id: int, session: Session = Depends(get_session)):
             for application, user in rows
         ]
     )
+
+@router.put("/applications/{application_id}/status")
+def update_application_status(application_id: int, payload: dict, session: Session = Depends(get_session)):
+    application = session.get(Application, application_id)
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    status_value = payload.get("status")
+    if not status_value:
+        raise HTTPException(status_code=400, detail="Status is required")
+
+    try:
+        application.status = ApplicationStatus(status_value)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid status")
+
+    session.add(application)
+    session.commit()
+    session.refresh(application)
+
+    history = ApplicationStatusHistory(
+        application_id=application.id,
+        status=application.status,
+        comment=f"Application status updated to {application.status}"
+    )
+    session.add(history)
+    session.commit()
+
+    return {"message": "Application status updated successfully"}
