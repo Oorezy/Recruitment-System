@@ -25,5 +25,5 @@ class ApplicationStatusHistory(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     application_id: int = Field(foreign_key="applications.id")
     status: ApplicationStatus
-    note: Optional[str] = None
+    comment: Optional[str] = None
     updated_at: datetime = Field(default_factory=datetime.utcnow)

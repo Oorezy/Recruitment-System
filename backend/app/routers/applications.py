@@ -2,7 +2,7 @@
 from email.mime import application
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from app.db import session
 from app.db.session import get_session
@@ -30,7 +30,14 @@ def submit_application(job_id: int = Form(...),
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
     
-    # Handle if application FileExistsError
+    existing_application = session.exec(
+            select(Application).where(
+                Application.applicant_id == applicant_id,
+                Application.job_id == job_id
+            )
+        ).first()
+    if existing_application:
+        raise HTTPException(status_code=400, detail="You have already applied for this job")
         
     application = Application(
         job_id=job_id,
@@ -52,7 +59,7 @@ def submit_application(job_id: int = Form(...),
 
     
     history = ApplicationStatusHistory(
-            application=application,
+            application_id=application.id,
             status=Application.ApplicationStatus.APPLIED,
             comment="Application submitted"
         )
