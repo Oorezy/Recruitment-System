@@ -13,6 +13,7 @@ class Application(SQLModel, table=True):
     cover_letter: Optional[str] = None
     status: ApplicationStatus = ApplicationStatus.APPLIED
     match_score: Optional[int] = None
+    skills: Optional[str] = None
     matched_skills: Optional[str] = ""
     created_at: datetime = Field(default_factory=datetime.utcnow)   
     resume_path: Optional[str] = None

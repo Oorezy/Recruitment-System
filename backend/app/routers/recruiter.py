@@ -6,9 +6,10 @@ from app.models.job import Job
 from app.models.application import Application, ApplicationStatusHistory
 from app.models.user import User
 from app.schemas.job import JobCreate, JobUpdate
-from app.schemas.application import RecruiterApplicationListResponse, RecruiterApplicationsResponse
+from app.schemas.application import RecruiterApplicationListResponse, RecruiterApplicationsResponse, ApplicantDetailsResponse
 from app.enums import ApplicationStatus
 from app.utils import (
+    comma_string_to_list,
     list_to_comma_string,
     list_to_newline_string,
     serialize_job,
@@ -154,3 +155,26 @@ def update_application_status(application_id: int, payload: dict, session: Sessi
     session.commit()
 
     return {"message": "Application status updated successfully"}
+
+@router.get("/applications/{application_id}", response_model=ApplicantDetailsResponse)
+def get_candidate_details(application_id: int, session: Session = Depends(get_session)):
+    application = session.get(Application, application_id)
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    user = session.get(User, application.applicant_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="Applicant not found")
+
+    return ApplicantDetailsResponse(
+        id=application.id,
+        applicant_name=user.first_name + " " + user.last_name,
+        email=user.email,
+        phone=user.phone,
+        status=application.status,
+        cover_letter=application.cover_letter,
+        match_score=application.match_score,
+        skills=comma_string_to_list(application.skills or ""),
+        matched_skills=comma_string_to_list(application.matched_skills or ""),
+        resume_filename=application.resume_filename,
+    )

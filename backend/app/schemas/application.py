@@ -47,3 +47,17 @@ class RecruiterApplicationsResponse(BaseModel):
     match_score: Optional[int] = None
     class Config:
         arbitrary_types_allowed = True
+
+
+class ApplicantDetailsResponse(BaseModel):
+    id: int
+    applicant_name: str
+    email: str
+    phone: Optional[str] = None
+    status: ApplicationStatus
+    cover_letter: Optional[str] = None
+    match_score: Optional[int] = None
+    skills: List[str] = []
+    matched_skills: List[str] = []
+    resume_filename: Optional[str] = None
+    experience_summary: Optional[str] = None
