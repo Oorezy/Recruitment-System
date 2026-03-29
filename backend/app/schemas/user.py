@@ -1,28 +1,27 @@
 from typing import Optional
-from pydantic import BaseModel, EmailStr
+from pydantic import EmailStr
+from app.schemas.base_schema import BaseSchema
 from app.enums import UserRole
 
 
-class UserCreate(BaseModel):
-    firstName: str
-    lastName: str
+class UserCreate(BaseSchema):
+    first_name: str
+    last_name: str
     email: EmailStr
     password: str
     role: UserRole
     phone: Optional[str] = None
 
 
-class UserLogin(BaseModel):
+class UserLogin(BaseSchema):
     email: EmailStr
     password: str
 
 
-class UserResponse(BaseModel):
+class UserResponse(BaseSchema):
     id: int
-    firstName: str
-    lastName: str
+    first_name: str
+    last_name: str
     email: EmailStr
+    phone: str
     role: UserRole
-
-    class Config:
-        from_attributes = True

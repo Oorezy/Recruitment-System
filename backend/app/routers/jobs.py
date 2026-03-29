@@ -8,13 +8,13 @@ from app.schemas.job import JobResponse
 
 router = APIRouter()
 
-@router.get("")
+@router.get("", response_model=list[JobResponse])
 def get_jobs(session: Session = Depends(get_session)):
     jobs = session.exec(select(Job)).all()
     return [serialize_job(job) for job in jobs]
     
 
-@router.get("/{job_id}")
+@router.get("/{job_id}", response_model=JobResponse)
 def get_job(job_id: int, session: Session = Depends(get_session)):
     job = session.get(Job, job_id)
 

@@ -12,5 +12,5 @@ class User(SQLModel, table=True):
     email: str = Field(unique=True)
     password_hash: str
     role: UserRole
-    phone: Optional[str] = None
+    phone: str
     

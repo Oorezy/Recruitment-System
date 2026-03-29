@@ -1,9 +1,9 @@
 from typing import List, Optional
 from datetime import date
-from pydantic import BaseModel
+from app.schemas.base_schema import BaseSchema
 
 
-class JobCreate(BaseModel):
+class JobCreate(BaseSchema):
     title: str
     department: str
     location: str
@@ -17,7 +17,7 @@ class JobCreate(BaseModel):
     recruiter_id: Optional[int] = None
 
 
-class JobUpdate(BaseModel):
+class JobUpdate(BaseSchema):
     title: Optional[str] = None
     department: Optional[str] = None
     location: Optional[str] = None
@@ -30,7 +30,7 @@ class JobUpdate(BaseModel):
     qualifications: Optional[List[str]] = None
 
 
-class JobResponse(BaseModel):
+class JobResponse(BaseSchema):
     id: int
     title: str
     department: str

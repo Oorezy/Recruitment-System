@@ -1,5 +1,6 @@
 
 from email.mime import application
+import logging
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlmodel import Session, select
@@ -10,9 +11,11 @@ from app.models.user import User
 from app.models.application import Application, ApplicationStatusHistory
 from app.models.job import Job
 from app.services.fileUpload import save_resume_file
-from app.enums import UserRole
+from app.enums import ApplicationStatus, UserRole
 from app.schemas.application import ApplicationHistoryResponse, MyApplicationListResponse, MyApplicationDetailsResponse
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -20,53 +23,54 @@ router = APIRouter()
 def submit_application(job_id: int = Form(...), 
     applicant_id: int = Form(...),
     cover_letter: str = Form(""),
+    skills: str = Form(""),
     resume: UploadFile = File(...),
     session: Session = Depends(get_session)
 ):
-    applicant = session.get(User, applicant_id)
+    with session.begin():
+        applicant = session.get(User, applicant_id)
 
-    if not applicant or applicant.role != UserRole.APPLICANT:
-        raise HTTPException(status_code=404, detail="Applicant not found")  
-    
-    job = session.get(Job, job_id)
-    if not job:
-        raise HTTPException(status_code=404, detail="Job not found")
-    
-    existing_application = session.exec(
-            select(Application).where(
-                Application.applicant_id == applicant_id,
-                Application.job_id == job_id
-            )
-        ).first()
-    if existing_application:
-        raise HTTPException(status_code=400, detail="You have already applied for this job")
+        if not applicant or applicant.role != UserRole.APPLICANT:
+            raise HTTPException(status_code=404, detail="Applicant not found")  
         
-    application = Application(
-        job_id=job_id,
-        applicant_id=applicant_id,
-        cover_letter=cover_letter,
-        status=Application.ApplicationStatus.APPLIED
-    )
-
-    if resume:
-            save_path, original_name = save_resume_file(resume)
-            application.resume_path = save_path
-            application.resume_filename = original_name
-
-        # Run api call to match resume with job
-
-    session.add(application)
-    session.commit()
-    session.refresh(application)
-
-    
-    history = ApplicationStatusHistory(
-            application_id=application.id,
-            status=Application.ApplicationStatus.APPLIED,
-            comment="Application submitted"
+        job = session.get(Job, job_id)
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+        
+        existing_application = session.exec(
+                select(Application).where(
+                    Application.applicant_id == applicant_id,
+                    Application.job_id == job_id
+                )
+            ).first()
+        if existing_application:
+            raise HTTPException(status_code=400, detail="You have already applied for this job")
+            
+        application = Application(
+            job_id=job_id,
+            applicant_id=applicant_id,
+            cover_letter=cover_letter,
+            status=ApplicationStatus.APPLIED,
+            skills=skills
         )
-    session.add(history)
-    session.commit()
+
+        if resume:
+                save_path, original_name = save_resume_file(resume)
+                application.resume_path = save_path
+                application.resume_filename = original_name
+
+            # Run api call to match resume with job
+
+        session.add(application)
+        session.flush() 
+        logger.info(application)
+        
+        history = ApplicationStatusHistory(
+                application_id=application.id,
+                status=ApplicationStatus.APPLIED,
+                comment="Application submitted"
+            )
+        session.add(history)
 
     return {"message": "Application submitted successfully", "application_id": application.id}
 
@@ -91,10 +95,11 @@ def get_my_applications(applicant_id: int, session: Session = Depends(get_sessio
             job_title=job.title,
             company_name="Google",
             status=application.status,
+            resume_filename=application.resume_filename,
             applied_at=application.created_at,
         ))
 
-    return {"applications": result}
+    return result
 
 @router.get("/my/{application_id}", response_model=MyApplicationDetailsResponse)
 def get_my_application_details(
@@ -112,8 +117,7 @@ def get_my_application_details(
         .where(ApplicationStatusHistory.application_id == application.id)
     ).all()
 
-    return {
-        MyApplicationDetailsResponse(
+    return MyApplicationDetailsResponse(
             id=application.id,
             job_title=job.title,
             company_name="Google",
@@ -124,10 +128,9 @@ def get_my_application_details(
             status_history=[
                 ApplicationHistoryResponse(
                     status=item.status,
-                    note=item.note,
+                    comment=item.comment,
                     updated_at=item.updated_at
                 )
                 for item in history_items
             ]
         )
-    }

@@ -20,7 +20,7 @@ app.add_middleware(
 os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 
 
-app.include_router(auth.router)
+app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(jobs.router, prefix="/jobs", tags=["Jobs"])
 app.include_router(recruiter.router, prefix="/recruiter", tags=["Recruiter"])
 app.include_router(applications.router, prefix="/applications", tags=["Applications"])

@@ -9,16 +9,16 @@ from app.models.user import User
 router = APIRouter()
 
 
-@router.get("/auth")
+@router.get("/")
 def auth():
     return {"message": "Auth router working"}
 
-@router.post("/auth/register")
+@router.post("/register")
 def register(formData: UserCreate, session: Session = Depends(get_session)):
 
     new_user = User(
-        first_name=formData.firstName,
-        last_name=formData.lastName,
+        first_name=formData.first_name,
+        last_name=formData.last_name,
         email=formData.email,
         password_hash=hash_password(formData.password),
         role=formData.role,
@@ -32,7 +32,7 @@ def register(formData: UserCreate, session: Session = Depends(get_session)):
     return {"message": "User registered successfully"}
 
 
-@router.post("/auth/login", response_model=UserResponse)
+@router.post("/login", response_model=UserResponse)
 def login(formData: UserLogin, session: Session = Depends(get_session)):
 
     user = session.exec(
@@ -45,13 +45,7 @@ def login(formData: UserLogin, session: Session = Depends(get_session)):
     if not verify_password(formData.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    return UserResponse(
-            id=user.id,
-            firstName=user.first_name,
-            lastName=user.last_name,
-            email=user.email,
-            role=user.role
-        )
+    return UserResponse.model_validate(user)
     
     
 

@@ -5,8 +5,8 @@ from app.db.session import get_session
 from app.models.job import Job
 from app.models.application import Application, ApplicationStatusHistory
 from app.models.user import User
-from app.schemas.job import JobCreate, JobUpdate
-from app.schemas.application import RecruiterApplicationListResponse, RecruiterApplicationsResponse, ApplicantDetailsResponse
+from app.schemas.job import JobCreate, JobResponse, JobUpdate
+from app.schemas.application import RecruiterApplicationListResponse, RecruiterApplicationsResponse, ApplicantDetailsResponse, ApplicationStatusUpdate
 from app.enums import ApplicationStatus
 from app.utils import (
     comma_string_to_list,
@@ -17,13 +17,21 @@ from app.utils import (
 
 router = APIRouter()
 
-@router.get("/jobs")
+@router.get("/jobs", response_model=list[JobResponse])
 def get_recruiter_jobs(recruiter_id: int, session: Session = Depends(get_session)):
+    user = session.get(User, recruiter_id)
+    if not user or user.role != "recruiter":
+        raise HTTPException(status_code=400, detail="Invalid recruiter ID")
+    
     jobs = session.exec(select(Job).where(Job.recruiter_id == recruiter_id)).all()
-    return {"jobs": [serialize_job(job) for job in jobs]}
+    return [serialize_job(job) for job in jobs]
 
-@router.post("/jobs")
+@router.post("/jobs", status_code=201)
 def create_job(job_data: JobCreate, session: Session = Depends(get_session)):
+    user = session.get(User, job_data.recruiter_id)
+    if not user or user.role != "recruiter":
+        raise HTTPException(status_code=400, detail="Invalid recruiter ID")
+
     job = Job(
         title=job_data.title,
         department=job_data.department,
@@ -42,15 +50,12 @@ def create_job(job_data: JobCreate, session: Session = Depends(get_session)):
     session.commit()
     session.refresh(job)
 
-    return {
-        "message": "Job created successfully",
-        "job": serialize_job(job)
-    }
+    return {"message": "Job created successfully"}
 
 @router.put("/jobs/{job_id}")
 def update_job(job_id: int, job_data: JobUpdate, session: Session = Depends(get_session)):
     job = session.get(Job, job_id)
-
+#Validate user
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
 
@@ -117,7 +122,7 @@ def get_job_applications(job_id: int, session: Session = Depends(get_session)):
         applications=[
             RecruiterApplicationsResponse(
                 id=application.id,
-                applicant_name=user.full_name,
+                applicant_name=user.first_name + " " + user.last_name,
                 email=user.email,
                 status=application.status,
                 applied_at=application.created_at,
@@ -128,12 +133,12 @@ def get_job_applications(job_id: int, session: Session = Depends(get_session)):
     )
 
 @router.put("/applications/{application_id}/status")
-def update_application_status(application_id: int, payload: dict, session: Session = Depends(get_session)):
+def update_application_status(application_id: int, payload: ApplicationStatusUpdate, session: Session = Depends(get_session)):
     application = session.get(Application, application_id)
     if not application:
         raise HTTPException(status_code=404, detail="Application not found")
 
-    status_value = payload.get("status")
+    status_value = payload.status
     if not status_value:
         raise HTTPException(status_code=400, detail="Status is required")
 
