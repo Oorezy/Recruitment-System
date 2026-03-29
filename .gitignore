@@ -6,3 +6,4 @@ venv/
 uploads/resumes/*
 alembic/versions/__pycache__/
 alembic/*
+**/uploads/resumes/
