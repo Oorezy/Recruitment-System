@@ -18,6 +18,7 @@ class MyApplicationDetailsResponse(BaseSchema):
     company_name: str
     status: ApplicationStatus
     applied_at: datetime
+    skills: List[str] = []
     cover_letter: Optional[str] = None
     resume_filename: Optional[str] = None
     status_history: List[ApplicationHistoryResponse] = []

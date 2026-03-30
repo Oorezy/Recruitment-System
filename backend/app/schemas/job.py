@@ -14,7 +14,7 @@ class JobCreate(BaseSchema):
     required_skills: List[str] = []
     responsibilities: List[str] = []
     qualifications: List[str] = []
-    recruiter_id: Optional[int] = None
+    recruiter_id: int
 
 
 class JobUpdate(BaseSchema):

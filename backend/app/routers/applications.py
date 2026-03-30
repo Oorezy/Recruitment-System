@@ -13,6 +13,7 @@ from app.models.job import Job
 from app.services.fileUpload import save_resume_file
 from app.enums import ApplicationStatus, UserRole
 from app.schemas.application import ApplicationHistoryResponse, MyApplicationListResponse, MyApplicationDetailsResponse
+from app.utils import comma_string_to_list
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -124,6 +125,7 @@ def get_my_application_details(
             status=application.status,
             applied_at=application.created_at,
             cover_letter=application.cover_letter,
+            skills=comma_string_to_list(application.skills),
             resume_filename=application.resume_filename,
             status_history=[
                 ApplicationHistoryResponse(
