@@ -104,33 +104,54 @@ def delete_job(job_id: int, session: Session = Depends(get_session)):
 
     return {"message": "Job deleted successfully"}
 
-@router.get("/jobs/{job_id}/applications", response_model=RecruiterApplicationListResponse)
+@router.get("/applications", response_model=list[RecruiterApplicationsResponse])
+def get_recruiter_applications(recruiter_id: int, session: Session = Depends(get_session)):
+    user = session.get(User, recruiter_id)
+    if not user or user.role != "recruiter":
+        raise HTTPException(status_code=400, detail="Invalid recruiter ID")
+
+    applications = session.exec(select(Application, User, Job)
+        .join(User, User.id == Application.applicant_id)
+        .join(Job, Job.id == Application.job_id)
+        .where(Job.recruiter_id == recruiter_id)).all()
+    
+
+    return [RecruiterApplicationsResponse(
+                id=application.id,
+                applicant_name=user.first_name + " " + user.last_name,
+                email=user.email,
+                status=application.status,
+                applied_at=application.created_at,
+                match_score=application.match_score,
+                job_title=job.title,
+                job_description=job.description
+            )
+        for application, user, job in applications]
+
+@router.get("/jobs/{job_id}/applications", response_model=list[RecruiterApplicationsResponse])
 def get_job_applications(job_id: int, session: Session = Depends(get_session)):
     job = session.get(Job, job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
 
     rows = session.exec(
-        select(Application, User)
+        select(Application, User, Job)
         .join(User, User.id == Application.applicant_id)
+        .join(Job, Job.id == Application.job_id)
         .where(Application.job_id == job_id)
     ).all()
 
-    return RecruiterApplicationListResponse(
-        job_title=job.title,
-        job_description=job.description,
-        applications=[
-            RecruiterApplicationsResponse(
+    return [RecruiterApplicationsResponse(
                 id=application.id,
                 applicant_name=user.first_name + " " + user.last_name,
                 email=user.email,
                 status=application.status,
                 applied_at=application.created_at,
-                match_score=application.match_score
+                match_score=application.match_score,
+                job_title=job.title,
+                job_description=job.description
             )
-            for application, user in rows
-        ]
-    )
+            for application, user, job in rows]
 
 @router.put("/applications/{application_id}/status")
 def update_application_status(application_id: int, payload: ApplicationStatusUpdate, session: Session = Depends(get_session)):

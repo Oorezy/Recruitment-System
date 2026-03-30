@@ -34,6 +34,8 @@ class RecruiterApplicationListResponse(BaseSchema):
 
 class RecruiterApplicationsResponse(BaseSchema):
     id: int
+    job_title: str
+    job_description: str
     applicant_name: str
     email: str
     status: ApplicationStatus
