@@ -17,6 +17,7 @@ loginForm.addEventListener("submit", async function (e) {
 
       localStorage.setItem("id", response.id);
       localStorage.setItem("role", response.role);
+      localStorage.setItem("user", JSON.stringify(response));
 
       if (response.role === "recruiter") {
         window.location.href = "recruiter-dashboard.html";

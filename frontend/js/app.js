@@ -14,3 +14,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+function getCurrentUser() {
+  try {
+    return JSON.parse(localStorage.getItem("user"));
+  } catch (error) {
+    return null;
+  }
+}
