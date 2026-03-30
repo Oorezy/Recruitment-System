@@ -7,22 +7,6 @@ const underReviewCountEl = document.getElementById("underReviewCount");
 const shortlistedCountEl = document.getElementById("shortlistedCount");
 const interviewCountEl = document.getElementById("interviewCount");
 
-function redirectIfNotApplicant() {
-  const role = localStorage.getItem("role");
-
-  if (!role) {
-    window.location.href = "login.html";
-    return false;
-  }
-
-  if (role !== "applicant") {
-    window.location.href = "recruiter-dashboard.html";
-    return false;
-  }
-
-  return true;
-}
-
 function normalizeStatus(status) {
   return (status || "Applied").toString().trim().toLowerCase();
 }
@@ -163,7 +147,7 @@ async function loadApplicantApplications() {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-  if (!redirectIfNotApplicant()) return;
+  if (!ensureIsApplicant()) return;
 
   renderWelcome();
   await loadApplicantProfile();

@@ -8,22 +8,6 @@ const openJobsCountEl = document.getElementById("openJobsCount");
 const totalRecruiterApplicationsEl = document.getElementById("totalRecruiterApplications");
 const recruiterShortlistedCountEl = document.getElementById("recruiterShortlistedCount");
 
-function redirectIfNotRecruiter() {
-  const role = localStorage.getItem("role");
-
-  if (!role) {
-    window.location.href = "login.html";
-    return false;
-  }
-
-  if (role !== "recruiter") {
-    window.location.href = "applicant-dashboard.html";
-    return false;
-  }
-
-  return true;
-}
-
 function getApplicationStatusClass(status) {
 
   if (status === "applied") return "status-applied";
@@ -189,7 +173,7 @@ async function loadRecruiterDashboardData() {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-  if (!redirectIfNotRecruiter()) return;
+  if (!ensureIsRecruiter()) return;
 
   formatRecruiterName();
   await renderRecruiterProfile();

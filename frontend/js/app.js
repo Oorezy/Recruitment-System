@@ -22,3 +22,39 @@ function getCurrentUser() {
     return null;
   }
 }
+
+function normalizeText(value) {
+  return (value || "").toString().trim().toLowerCase();
+}
+
+function ensureIsRecruiter() {
+  const role = localStorage.getItem("role");
+
+  if (!role) {
+    window.location.href = "login.html";
+    return false;
+  }
+
+  if (role !== "recruiter") {
+    window.location.href = "applicant-dashboard.html";
+    return false;
+  }
+
+  return true;
+}
+
+function ensureIsApplicant() {
+  const role = localStorage.getItem("role");
+
+    if (!role) {
+        window.location.href = "login.html";
+        return false;
+    }
+
+    if (role !== "applicant") {
+        window.location.href = "recruiter-dashboard.html";
+        return false;
+    }
+
+    return true;
+}
