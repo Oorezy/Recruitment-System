@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Manage Jobs - Recruitment System</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>Recruitment System</h1>
+    </div>
+
+    <nav class="topbar-right">
+      <a href="recruiter-dashboard.html" class="nav-link">Dashboard</a>
+      <a href="recruiter-jobs.html" class="nav-link active">Manage Jobs</a>
+      <a href="#" class="nav-link" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <section class="page-header page-header-row">
+      <div>
+        <h2>Manage Jobs</h2>
+        <p>Create, update, and monitor job postings.</p>
+      </div>
+
+      <a href="create-job.html" class="btn-primary btn-inline">Create Job</a>
+    </section>
+
+    <section class="filter-bar">
+      <input
+        type="text"
+        id="recruiterJobSearchInput"
+        placeholder="Search by title, location, or type"
+      />
+      <button class="btn-secondary" id="recruiterJobSearchBtn">Search</button>
+    </section>
+
+    <section id="recruiterJobsContainer" class="list-stack">
+      <p>Loading jobs...</p>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/recruiter-jobs.js"></script>
+</body>
+</html>
