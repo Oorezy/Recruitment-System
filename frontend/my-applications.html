@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Applications - Recruitment System</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>Recruitment System</h1>
+    </div>
+
+    <nav class="topbar-right">
+      <a href="jobs.html" class="nav-link">Jobs</a>
+      <a href="applicant-dashboard.html" class="nav-link">Dashboard</a>
+      <a href="my-applications.html" class="nav-link active">My Applications</a>
+      <a href="#" class="nav-link" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <section class="page-header">
+      <div>
+        <h2>My Applications</h2>
+        <p>Track all jobs you have applied for.</p>
+      </div>
+    </section>
+
+    <section class="filter-bar">
+      <input
+        type="text"
+        id="myApplicationsSearchInput"
+        placeholder="Search by job title, company, or status"
+      />
+      <button class="btn-secondary" id="myApplicationsSearchBtn">Search</button>
+    </section>
+
+    <section id="myApplicationsContainer" class="list-stack">
+      <p>Loading applications...</p>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/my-applications.js"></script>
+</body>
+</html>
