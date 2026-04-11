@@ -1,1 +1,172 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recruitment System</title>
+  <link rel="stylesheet" href="css/styles.css" />
+   <style>
+    .hero-section {
+  padding: 70px 20px;
+  background: linear-gradient(to right, #eef5ff, #f8fbff);
+}
+
+.hero-content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-content h2 {
+  font-size: 42px;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+.hero-content p {
+  font-size: 18px;
+  color: #555;
+  max-width: 720px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.feature-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  color: #555;
+  line-height: 1.6;
+}
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: grid;
+  gap: 10px;
+}
+
+.toast {
+  min-width: 260px;
+  max-width: 360px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-left: 5px solid #1a73e8;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+  color: #222;
+  font-size: 14px;
+}
+
+.toast-success {
+  border-left-color: #15803d;
+}
+
+.toast-error {
+  border-left-color: #b91c1c;
+}
+
+.toast-info {
+  border-left-color: #1a73e8;
+}
+
+@media (max-width: 768px) {
+  .hero-content h2 {
+    font-size: 32px;
+  }
+
+  .hero-content p {
+    font-size: 16px;
+  }
+
+  .toast-container {
+    left: 20px;
+    right: 20px;
+  }
+
+  .toast {
+    max-width: none;
+    min-width: 0;
+  }
+}
+   </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>Recruitment System</h1>
+    </div>
+
+    <nav class="topbar-right">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="jobs.html" class="nav-link">Jobs</a>
+      <a href="login.html" class="nav-link">Login</a>
+      <a href="register.html" class="nav-link">Register</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero-section">
+      <div class="hero-content">
+        <h2>Smart Recruitment Made Simple</h2>
+        <p>
+          Manage job postings, review applications, rank candidates,
+          and track hiring progress in one place.
+        </p>
+
+        <div class="hero-actions">
+          <a href="jobs.html" class="btn-primary btn-inline">Browse Jobs</a>
+          <a href="register.html" class="btn-secondary btn-inline text-no-underline" style="margin: 10px 0px 0px;">Create Account</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-container">
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>For Applicants</h3>
+          <p>Create a profile, upload your resume, apply for roles, and track every application stage.</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>For Recruiters</h3>
+          <p>Create jobs, manage incoming applications, review candidate details, and update statuses.</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Smart Matching</h3>
+          <p>Use resume skill extraction and candidate match scores to quickly identify suitable applicants.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

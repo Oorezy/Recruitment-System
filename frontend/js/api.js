@@ -1,12 +1,13 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+// const API_BASE_URL = "http://127.0.0.1:8000";//DEV 
+const API_BASE_URL = "https://oore-hello.norwayeast.cloudapp.azure.com/api";//PROD
 
 async function apiRequest(endpoint, method = "GET", data = null) {
 
     const options = {
-    method
-    // headers: {
-    //   "Content-Type": data instanceof FormData ? "multipart/form-data" : "application/json"
-    // }
+    method,
+    headers: {
+      "Content-Type": data instanceof FormData ? "multipart/form-data" : "application/json"
+    }
   };
 
   if (data) {
