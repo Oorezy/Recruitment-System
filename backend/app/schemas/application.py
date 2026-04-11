@@ -12,6 +12,11 @@ class MyApplicationListResponse(BaseSchema):
     applied_at: datetime
     resume_filename: Optional[str] = None
 
+class ApplicationHistoryResponse(BaseSchema):
+    status: ApplicationStatus
+    comment: Optional[str] = None
+    updated_at: datetime
+    
 class MyApplicationDetailsResponse(BaseSchema):
     id: int
     job_title: str
@@ -23,10 +28,6 @@ class MyApplicationDetailsResponse(BaseSchema):
     resume_filename: Optional[str] = None
     status_history: List[ApplicationHistoryResponse] = []
 
-class ApplicationHistoryResponse(BaseSchema):
-    status: ApplicationStatus
-    comment: Optional[str] = None
-    updated_at: datetime
 
 class RecruiterApplicationListResponse(BaseSchema):
     job_title: str
