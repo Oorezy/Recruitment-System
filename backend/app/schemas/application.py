@@ -16,7 +16,7 @@ class ApplicationHistoryResponse(BaseSchema):
     status: ApplicationStatus
     comment: Optional[str] = None
     updated_at: datetime
-    
+
 class MyApplicationDetailsResponse(BaseSchema):
     id: int
     job_title: str
@@ -28,12 +28,6 @@ class MyApplicationDetailsResponse(BaseSchema):
     resume_filename: Optional[str] = None
     status_history: List[ApplicationHistoryResponse] = []
 
-
-class RecruiterApplicationListResponse(BaseSchema):
-    job_title: str
-    job_description: str
-    applications: List[RecruiterApplicationsResponse] = []
-
 class RecruiterApplicationsResponse(BaseSchema):
     id: int
     job_title: str
@@ -44,6 +38,10 @@ class RecruiterApplicationsResponse(BaseSchema):
     applied_at: datetime
     match_score: Optional[int] = None
 
+class RecruiterApplicationListResponse(BaseSchema):
+    job_title: str
+    job_description: str
+    applications: List[RecruiterApplicationsResponse] = []
 
 class ApplicantDetailsResponse(BaseSchema):
     id: int
