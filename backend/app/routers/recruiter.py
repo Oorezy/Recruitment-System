@@ -116,7 +116,8 @@ def get_recruiter_applications(recruiter_id: int, session: Session = Depends(get
     applications = session.exec(select(Application, User, Job)
         .join(User, User.id == Application.applicant_id)
         .join(Job, Job.id == Application.job_id)
-        .where(Job.recruiter_id == recruiter_id)).all()
+        .where(Job.recruiter_id == recruiter_id)
+        .order_by(Application.created_at.desc())).all()
     
 
     return [RecruiterApplicationsResponse(
@@ -205,7 +206,9 @@ def get_candidate_details(application_id: int, session: Session = Depends(get_se
         match_score=application.match_score,
         skills=comma_string_to_list(application.skills or ""),
         matched_skills=comma_string_to_list(application.matched_skills or ""),
+        missing_skills=comma_string_to_list(application.missing_skills or ""),
         resume_filename=application.resume_filename,
+        summary_report=application.summary_report
     )
 
 @router.get("/applications/{application_id}/resume", response_class=FileResponse)

@@ -308,6 +308,7 @@ body {
 }
 
 .btn-secondary {
+  margin-top: 10px;
   padding: 12px 18px;
   border: 1px solid #1a73e8;
   background: #fff;

@@ -5,5 +5,5 @@ __pycache__/
 venv/
 uploads/resumes/*
 alembic/versions/__pycache__/
-alembic/*
+alembic/
 **/uploads/resumes/
