@@ -32,9 +32,17 @@ registerForm.addEventListener("submit", async function (e) {
     registerMessageEl.style.color = "green";
     registerMessageEl.textContent = response.message || "Registration successful. Redirecting...";
 
-    setTimeout(() => {
-      window.location.href = "login.html";
-    }, 1200);
+    localStorage.setItem("id", response.id);
+    localStorage.setItem("role", response.role);
+    localStorage.setItem("user", JSON.stringify(response));
+
+      setTimeout(() => {
+        if (response.role === "recruiter") {
+          window.location.href = "recruiter-dashboard.html";
+        } else {
+          window.location.href = "applicant-dashboard.html";
+        }
+      }, 1000);
   } catch (error) {
     registerMessageEl.style.color = "red";
     registerMessageEl.textContent = error.message;

@@ -15,7 +15,7 @@ def auth():
 
 @router.post("/register")
 def register(formData: UserCreate, session: Session = Depends(get_session)):
-    
+
     existing_user = session.exec(
         select(User).where(User.email == formData.email)
     ).first()
@@ -35,7 +35,9 @@ def register(formData: UserCreate, session: Session = Depends(get_session)):
     session.commit()
     session.refresh(new_user)
 
-    return {"message": "User registered successfully"}
+    return UserResponse.model_validate(new_user)
+
+    # return {"message": "User registered successfully"}
 
 
 @router.post("/login", response_model=UserResponse)
