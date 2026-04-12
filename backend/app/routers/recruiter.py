@@ -143,6 +143,7 @@ def get_job_applications(job_id: int, session: Session = Depends(get_session)):
         .join(User, User.id == Application.applicant_id)
         .join(Job, Job.id == Application.job_id)
         .where(Application.job_id == job_id)
+        .order_by(Application.match_score.desc())
     ).all()
 
     return [RecruiterApplicationsResponse(
