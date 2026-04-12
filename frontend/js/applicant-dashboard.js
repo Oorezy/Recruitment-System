@@ -39,8 +39,6 @@ function renderProfile(profile) {
   const fullName = profile.full_name;
   const email = profile.email;
   const phone = profile.phone;
-  const skills = Array.isArray(profile.skills) ? profile.skills.join(", ") : (profile.skills || "Not provided");
-  const resume = profile.resume_filename;
 
   profileSummary.innerHTML = `
     <div class="profile-list">
@@ -57,16 +55,6 @@ function renderProfile(profile) {
       <div class="profile-item">
         <span>Phone</span>
         <strong>${phone}</strong>
-      </div>
-
-      <div class="profile-item">
-        <span>Skills</span>
-        <strong>${skills}</strong>
-      </div>
-
-      <div class="profile-item">
-        <span>Resume</span>
-        <strong>${resume}</strong>
       </div>
     </div>
 
@@ -119,8 +107,6 @@ async function loadApplicantProfile() {
       full_name: user? `${user.first_name} ${user.last_name}` : "Not provided",
       email: user?.email || "Not provided",
       phone: user?.phone || "Not provided",
-      skills: "Not provided",
-      resume: "No resume uploaded"
     });
 
 }

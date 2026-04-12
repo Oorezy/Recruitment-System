@@ -17,6 +17,8 @@ function createSkillTags(skills = []) {
 
 function renderCandidateDetails(candidate) {
   const matchedSkills = candidate.matched_skills || [];
+    const missingSkills = candidate.missing_skills || [];
+
   const skills = candidate.skills || [];
 
   candidateDetailsContainer.innerHTML = `
@@ -43,6 +45,11 @@ function renderCandidateDetails(candidate) {
       </div>
 
        <div class="detail-card">
+        <h3>Missing Skills</h3>
+        ${createSkillTags(missingSkills)}
+      </div>
+
+       <div class="detail-card">
         <h3>Cover Letter</h3>
         ${candidate.cover_letter ? `<p>${candidate.cover_letter}</p>` : `<p>No cover letter provided.</p>`}
       </div>
@@ -61,6 +68,11 @@ function renderCandidateDetails(candidate) {
       `
       : `<p>No resume uploaded.</p>`
   }
+      </div>
+
+     <div class="detail-card" >
+      <h3>Application Summary</h3>
+      <p>${candidate.summary_report || "No summary available."}</p>
       </div>
     </div>
 

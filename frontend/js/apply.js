@@ -72,9 +72,10 @@ applyForm.addEventListener("submit", async function (e) {
     applyMessage.style.color = "green";
     applyMessage.textContent = "Application submitted successfully.";
 
-    setTimeout(() => {
-      window.location.href = "my-applications.html";
-    }, 1000);
+    window.location.href = "my-applications.html";
+    // setTimeout(() => {
+    //   window.location.href = "my-applications.html";
+    // }, 1000);
   } catch (error) {
     applyMessage.style.color = "red";
     applyMessage.textContent = error.message;
