@@ -70,7 +70,7 @@ async function renderRecruiterProfile() {
 
     <div class="quick-actions">
       <a href="recruiter-jobs.html" class="btn-primary" style="text-decoration:none; display:inline-block; width:auto;">Manage Jobs</a>
-      <a href="create-job.html" class="btn-secondary" style="text-decoration:none; display:inline-block;">Create Job</a>
+      <a href="create-job.html" class="btn-secondary" style="text-decoration:none; display:inline-block; margin-top: 10px;">Create Job</a>
     </div>
   `;
 }

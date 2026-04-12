@@ -54,7 +54,7 @@ function renderApplications(applications) {
           }
 
           <div class="application-actions">
-            <a class="btn-link" href="candidate-details.html?id=${application.id}">View Candidate</a>
+            <a class="btn-link" href="applicant-details.html?id=${application.id}">View Applicant</a>
 
             <select class="select-inline" id="status-${application.id}">
               <option value="Applied" ${application.status === "Applied" ? "selected" : ""}>Applied</option>
