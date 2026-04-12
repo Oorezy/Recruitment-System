@@ -49,11 +49,18 @@ function renderCandidateDetails(candidate) {
 
       <div class="detail-card">
         <h3>Resume</h3>
-        ${
-          candidate.resume_filename
-            ? `<p>${candidate.resume_filename}</p>`
-            : `<p>No resume uploaded.</p>`
-        }
+    ${
+    candidate.resume_filename
+      ? `
+        <p>${candidate.resume_filename}</p>
+        <div class="action-row" style="margin-top:10px;">
+          <button class="btn-secondary btn-inline" onclick="downloadResume(${candidate.id})">
+            View Resume
+          </button>
+        </div>
+      `
+      : `<p>No resume uploaded.</p>`
+  }
       </div>
     </div>
 
@@ -89,6 +96,22 @@ async function loadCandidateDetails() {
         <p>Failed to load candidate details: ${error.message}</p>
       </div>
     `;
+  }
+}
+
+async function downloadResume(applicationId) {
+  try {
+
+    const response = await apiRequest(`/recruiter/applications/${applicationId}/resume`);
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    window.open(url, "_blank");
+
+  } catch (error) {
+    console.error("Error downloading resume:", error.message);
+    alert(error.message);
   }
 }
 

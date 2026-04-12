@@ -1,4 +1,7 @@
+import os
+
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import FileResponse
 from sqlmodel import Session, select
 
 from app.db.session import get_session
@@ -203,4 +206,25 @@ def get_candidate_details(application_id: int, session: Session = Depends(get_se
         skills=comma_string_to_list(application.skills or ""),
         matched_skills=comma_string_to_list(application.matched_skills or ""),
         resume_filename=application.resume_filename,
+    )
+
+@router.get("/applications/{application_id}/resume", response_class=FileResponse)
+def download_applicant_resume(
+    application_id: int,
+    session: Session = Depends(get_session)
+):
+    application = session.get(Application, application_id)
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    if not application.resume_path:
+        raise HTTPException(status_code=404, detail="Resume not found")
+
+    if not os.path.exists(application.resume_path):
+        raise HTTPException(status_code=404, detail="Resume file does not exist on disk")
+
+    return FileResponse(
+        path=application.resume_path,
+        filename=application.resume_filename,
+        media_type="application/pdf"
     )

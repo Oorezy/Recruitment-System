@@ -55,10 +55,12 @@ def submit_application(job_id: int = Form(...),
             skills=skills
         )
 
-        if resume:
+        if resume and resume.filename.lower().endswith('.pdf'):
                 save_path, original_name = save_resume_file(resume)
                 application.resume_path = save_path
                 application.resume_filename = original_name
+        else:
+            raise HTTPException(status_code=400, detail="Invalid resume file. PDF file required.")
 
             # Run api call to match resume with job
 
