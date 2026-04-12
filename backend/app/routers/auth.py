@@ -15,6 +15,12 @@ def auth():
 
 @router.post("/register")
 def register(formData: UserCreate, session: Session = Depends(get_session)):
+    
+    existing_user = session.exec(
+        select(User).where(User.email == formData.email)
+    ).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="User already exists with this email")
 
     new_user = User(
         first_name=formData.first_name,
