@@ -2,7 +2,7 @@
 from email.mime import application
 import logging
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, BackgroundTasks
 from sqlmodel import Session, select
 
 from app.db import session
@@ -14,6 +14,7 @@ from app.services.fileUpload import save_resume_file
 from app.enums import ApplicationStatus, UserRole
 from app.schemas.application import ApplicationHistoryResponse, MyApplicationListResponse, MyApplicationDetailsResponse
 from app.utils import comma_string_to_list
+from app.services.resume_scoring import score_resume_against_job
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -21,12 +22,13 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 @router.post("")
-def submit_application(job_id: int = Form(...), 
+def submit_application(background_tasks: BackgroundTasks,
+    job_id: int = Form(...), 
     applicant_id: int = Form(...),
     cover_letter: str = Form(""),
     skills: str = Form(""),
-    resume: UploadFile = File(...),
-    session: Session = Depends(get_session)
+    resume: UploadFile = File(...), 
+    session: Session = Depends(get_session),
 ):
     with session.begin():
         applicant = session.get(User, applicant_id)
@@ -62,11 +64,10 @@ def submit_application(job_id: int = Form(...),
         else:
             raise HTTPException(status_code=400, detail="Invalid resume file. PDF file required.")
 
-            # Run api call to match resume with job
 
         session.add(application)
         session.flush() 
-        logger.info(application)
+        logger.info("Application submitted: %s", application)
         
         history = ApplicationStatusHistory(
                 application_id=application.id,
@@ -74,6 +75,9 @@ def submit_application(job_id: int = Form(...),
                 comment="Application submitted"
             )
         session.add(history)
+
+        # Run api call to match resume with job
+    background_tasks.add_task(score_resume_against_job, application.id)
 
     return {"message": "Application submitted successfully", "application_id": application.id}
 

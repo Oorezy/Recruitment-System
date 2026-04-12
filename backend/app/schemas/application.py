@@ -53,8 +53,9 @@ class ApplicantDetailsResponse(BaseSchema):
     match_score: Optional[int] = None
     skills: List[str] = []
     matched_skills: List[str] = []
+    missing_skills: List[str] = []
     resume_filename: Optional[str] = None
-    experience_summary: Optional[str] = None
+    summary_report: Optional[str] = None
 
 class ApplicationStatusUpdate(BaseSchema):
     status: ApplicationStatus
