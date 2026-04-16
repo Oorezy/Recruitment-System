@@ -109,7 +109,7 @@ async function loadJobApplications() {
     const response = await apiRequest(`/recruiter/jobs/${currentJobId}/applications`);
 
     allApplications = response;
-    if (response[0].job_title) {
+    if (response[0]?.job_title) {
       jobApplicationsTitle.textContent = `${response[0].job_title} - Applications`;
     }
 
