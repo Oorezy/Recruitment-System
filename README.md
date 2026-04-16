@@ -5,6 +5,10 @@ A recruitment system designed for Google, this uses AI to help filter out applic
 
 This project is a **Recruitment Management System** designed to help recruiters efficiently manage job applications and assist applicants in tracking their application progress.
 
+# Project Link
+Access the live application here:  
+👉 [View Live Project](https://oore-hello.norwayeast.cloudapp.azure.com/)
+
 The system focuses on:
 
 * Core **CRUD operations**
