@@ -115,9 +115,10 @@ async function loadJobApplications() {
 
     renderApplications(allApplications);
   } catch (error) {
+    console.error("Error loading applications:", error);
     jobApplicationsContainer.innerHTML = `
       <div class="empty-state">
-        <p>Failed to load applications: ${error.message}</p>
+        <p>No applications found for this job.</p>
       </div>
     `;
   }
