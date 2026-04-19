@@ -9,6 +9,10 @@ This project is a **Recruitment Management System** designed to help recruiters 
 Access the live application here:  
 👉 [View Live Project](https://oore-hello.norwayeast.cloudapp.azure.com/)
 
+Recruiter Sample Login: 
+Username: idea@gmail.com  
+Password: 1234
+
 The system focuses on:
 
 * Core **CRUD operations**
