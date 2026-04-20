@@ -297,3 +297,6 @@ This project demonstrates:
 * AI integration using Mistral
 * Clean modular backend architecture
 
+## References
+ChatGPT chat:
+https://chatgpt.com/share/69e625d2-4748-838d-849e-dc45e5307217
